@@ -13,6 +13,10 @@ K_ROLL_P: Final[float] = 50.0  # P constant of the roll PID.
 K_PITCH_P: Final[float] = 30.0  # P constant of the pitch PID.
 INITIAL_THRUST: Final[float] = 1.0
 
+# These were found by James to hinder idle drift
+REAR_COMPENSATION: Final[float] = 0.996
+LEFT_COMPENSATION: Final[float] = 0.998
+
 
 @final
 class Mavic:
@@ -76,10 +80,17 @@ class Mavic:
         front_right_velocity = vertical_input + roll_input + pitch_input + yaw_input
         rear_left_velocity = vertical_input - roll_input - pitch_input + yaw_input
         rear_right_velocity = vertical_input + roll_input - pitch_input - yaw_input
-        self.front_left_motor.setVelocity(K_VERTICAL_THRUST + front_left_velocity)
+        self.front_left_motor.setVelocity(
+            K_VERTICAL_THRUST * LEFT_COMPENSATION + front_left_velocity
+        )
         self.front_right_motor.setVelocity(-K_VERTICAL_THRUST - front_right_velocity)
-        self.rear_left_motor.setVelocity(-K_VERTICAL_THRUST - rear_left_velocity)
-        self.rear_right_motor.setVelocity(K_VERTICAL_THRUST + rear_right_velocity)
+        self.rear_left_motor.setVelocity(
+            -K_VERTICAL_THRUST * REAR_COMPENSATION * LEFT_COMPENSATION
+            - rear_left_velocity
+        )
+        self.rear_right_motor.setVelocity(
+            K_VERTICAL_THRUST * REAR_COMPENSATION + rear_right_velocity
+        )
 
     def step(self, timestep: int = 0):
         return self.robot.step(timestep or self.timestep)
