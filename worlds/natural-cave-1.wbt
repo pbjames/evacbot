@@ -1,0 +1,149 @@
+#VRML_SIM R2025a utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/robots/dji/mavic/protos/Mavic2Pro.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/appearances/protos/Asphalt.proto"
+
+WorldInfo {
+  defaultDamping Damping {
+    linear 0.5
+    angular 0.5
+  }
+}
+Viewpoint {
+  orientation -0.007665688700777165 -0.9434486172205716 -0.33143014932461135 0.0490211987575254
+  position -13.222822562818013 -0.980145090810457 1.0493086438293886
+  follow "Mavic 2 PRO"
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+Solid {
+  children [
+    Shape {
+      appearance Asphalt {
+        colorOverride 0 1 0
+      }
+      geometry Box {
+        size 3 3 0.1
+      }
+    }
+  ]
+  name "Starting floor"
+  boundingObject Shape {
+    appearance Asphalt {
+    }
+    geometry Box {
+      size 3 3 0.1
+    }
+  }
+}
+Solid {
+  translation 7.11 0 0
+  children [
+    Shape {
+      appearance Asphalt {
+        colorOverride 1 0 0
+      }
+      geometry Box {
+        size 3 3 0.1
+      }
+    }
+  ]
+  name "Ending floor"
+  boundingObject Shape {
+    appearance Asphalt {
+    }
+    geometry Box {
+      size 3 3 0.1
+    }
+  }
+}
+Mavic2Pro {
+  translation 0 0 0.11
+  controller "main_controller"
+}
+Group {
+  children [
+    Solid {
+      translation 2.00974 0.924396 0.889798
+      rotation 0.9999999999972473 2.346379999993541e-06 -7.815979999978485e-13 -3.1415853071795863
+      children [
+        DEF _324box Shape {
+          appearance DEF ROCK PBRAppearance {
+            metalness 0
+          }
+          geometry Box {
+            size 3 2 4
+          }
+        }
+      ]
+      boundingObject USE _324box
+    }
+    Solid {
+      translation 2.00974 -0.767895 -0.325866
+      rotation 0.9999999999944946 2.3463699999870824e-06 2.3463799999870823e-06 1.5708
+      children [
+        USE _324box
+      ]
+      name "solid(1)"
+      boundingObject USE _324box
+    }
+    Solid {
+      translation 4.39 -0.767915 -0.325866
+      rotation 0.9999999999944946 2.3463699999870824e-06 2.3463799999870823e-06 1.5708
+      children [
+        USE _324box
+      ]
+      name "solid(3)"
+      boundingObject USE _324box
+    }
+    Solid {
+      translation 4.39 -0.767917 3.37413
+      rotation 0.9999999999944946 2.3463699999870824e-06 2.3463799999870823e-06 1.5708
+      children [
+        USE _324box
+      ]
+      name "solid(6)"
+      boundingObject USE _324box
+    }
+    Solid {
+      translation 1.55 -0.767911 3.37413
+      rotation 0.9999999999944946 2.3463699999870824e-06 2.3463799999870823e-06 1.5708
+      children [
+        USE _324box
+      ]
+      name "solid(7)"
+      boundingObject USE _324box
+    }
+    Solid {
+      translation 2.00974 -1.75789 0.864124
+      rotation 0.9999999999972473 2.346379999993541e-06 5.0056299999862214e-12 -3.1415853071795863
+      children [
+        USE _324box
+      ]
+      name "solid(2)"
+      boundingObject USE _324box
+    }
+    Solid {
+      translation 4.36974 -1.75789 0.864124
+      rotation 0.9999999999972473 2.346379999993541e-06 5.0056299999862214e-12 -3.1415853071795863
+      children [
+        USE _324box
+      ]
+      name "solid(4)"
+      boundingObject USE _324box
+    }
+    Solid {
+      translation 4.36974 0.93211 0.864153
+      rotation 0.9999999999972473 2.346379999993541e-06 5.0056299999862214e-12 -3.1415853071795863
+      children [
+        USE _324box
+      ]
+      name "solid(5)"
+      boundingObject USE _324box
+    }
+  ]
+}
