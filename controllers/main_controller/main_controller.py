@@ -11,7 +11,7 @@ K_VERTICAL_OFFSET: Final[float] = (
 K_VERTICAL_P: Final[float] = 3.0  # P constant of the vertical PID.
 K_ROLL_P: Final[float] = 50.0  # P constant of the roll PID.
 K_PITCH_P: Final[float] = 30.0  # P constant of the pitch PID.
-INITIAL_VELOCITY: Final[float] = 1.0
+INITIAL_THRUST: Final[float] = 1.0
 
 
 @final
@@ -41,14 +41,14 @@ class Mavic:
         self.imu.enable(self.timestep)
         self.keyboard.enable(self.timestep)
         motors: list[Motor] = [
-            self.front_left_motor,
-            self.front_right_motor,
             self.rear_left_motor,
+            self.front_left_motor,
             self.rear_right_motor,
+            self.front_right_motor,
         ]
         for motor in motors:
             motor.setPosition(math.inf)
-            motor.setVelocity(INITIAL_VELOCITY)
+            motor.setVelocity(INITIAL_THRUST)
 
     def blink_switch_leds(self, value: bool):
         self.front_left_led.set(not value)
@@ -77,8 +77,8 @@ class Mavic:
         rear_left_velocity = vertical_input - roll_input - pitch_input + yaw_input
         rear_right_velocity = vertical_input + roll_input - pitch_input - yaw_input
         self.front_left_motor.setVelocity(K_VERTICAL_THRUST + front_left_velocity)
-        self.front_right_motor.setVelocity(K_VERTICAL_THRUST + front_right_velocity)
-        self.rear_left_motor.setVelocity(K_VERTICAL_THRUST + rear_left_velocity)
+        self.front_right_motor.setVelocity(-K_VERTICAL_THRUST - front_right_velocity)
+        self.rear_left_motor.setVelocity(-K_VERTICAL_THRUST - rear_left_velocity)
         self.rear_right_motor.setVelocity(K_VERTICAL_THRUST + rear_right_velocity)
 
     def step(self, timestep: int = 0):
@@ -126,27 +126,27 @@ def main():
         mavic.blink_switch_leds(int(mavic.robot.time) % 2 == 0)
         roll_disturbance = pitch_disturbance = yaw_disturbance = 0.0
         while (key := mavic.keyboard.getKey()) > 0:
-            if key == ord("k"):
+            if key == ord("K"):
                 pitch_disturbance = -2.0
-            elif key == ord("j"):
+            elif key == ord("J"):
                 pitch_disturbance = 2.0
-            elif key == ord("l"):
-                yaw_disturbance = -1.3
-            elif key == ord("h"):
-                yaw_disturbance = 1.3
-            elif key == ord("H"):
-                roll_disturbance = -1.0
             elif key == ord("L"):
+                yaw_disturbance = -1.3
+            elif key == ord("H"):
+                yaw_disturbance = 1.3
+            elif key == mavic.keyboard.LEFT:
+                roll_disturbance = -1.0
+            elif key == mavic.keyboard.RIGHT:
                 roll_disturbance = 1.0
-            elif key == ord("K"):
+            elif key == mavic.keyboard.UP:
                 target_altitude += 0.05
                 print(f"{target_altitude=}")
-            elif key == ord("J"):
+            elif key == mavic.keyboard.DOWN:
                 target_altitude -= 0.05
                 print(f"{target_altitude=}")
-            mavic.move_disturbance(
-                roll_disturbance, pitch_disturbance, yaw_disturbance, target_altitude
-            )
+        mavic.move_disturbance(
+            roll_disturbance, pitch_disturbance, yaw_disturbance, target_altitude
+        )
 
 
 if __name__ == "__main__":
