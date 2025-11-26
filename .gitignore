@@ -1,1 +1,2 @@
 worlds/.*
+controllers/*/**/__pycache__
