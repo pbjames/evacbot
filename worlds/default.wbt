@@ -6,6 +6,10 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/project
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/robots/dji/mavic/protos/Mavic2Pro.proto"
 
 WorldInfo {
+  defaultDamping Damping {
+    linear 0.5
+    angular 0.5
+  }
 }
 Viewpoint {
   orientation -0.5773502691896257 0.5773502691896257 0.5773502691896257 2.0944

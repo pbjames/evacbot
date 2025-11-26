@@ -1,28 +1,41 @@
-from controller.robot import Robot
+from mavic import Mavic
+from utils import print_help
 
-# create the Robot instance.
-robot = Robot()
 
-# get the time step of the current world.
-timestep = int(robot.getBasicTimeStep())
+def main():
+    mavic = Mavic()
+    print("Starting the drone..")
+    while mavic.step() != -1:
+        if mavic.robot.getTime() > 1.0:
+            break
+    print_help()
+    target_altitude = 1
+    while mavic.step() != -1:
+        mavic.blink_switch_leds(int(mavic.robot.time) % 2 == 0)
+        roll_disturbance = pitch_disturbance = yaw_disturbance = 0.0
+        while (key := mavic.keyboard.getKey()) > 0:
+            if key == ord("K"):
+                pitch_disturbance = -2.0
+            elif key == ord("J"):
+                pitch_disturbance = 2.0
+            elif key == ord("L"):
+                yaw_disturbance = -1.3
+            elif key == ord("H"):
+                yaw_disturbance = 1.3
+            elif key == mavic.keyboard.LEFT:
+                roll_disturbance = -1.0
+            elif key == mavic.keyboard.RIGHT:
+                roll_disturbance = 1.0
+            elif key == mavic.keyboard.UP:
+                target_altitude += 0.05
+                print(f"{target_altitude=}")
+            elif key == mavic.keyboard.DOWN:
+                target_altitude -= 0.05
+                print(f"{target_altitude=}")
+        mavic.move_disturbance(
+            roll_disturbance, pitch_disturbance, yaw_disturbance, target_altitude
+        )
 
-# You should insert a getDevice-like function in order to get the
-# instance of a device of the robot. Something like:
-#  motor = robot.getDevice('motorname')
-#  ds = robot.getDevice('dsname')
-#  ds.enable(timestep)
 
-# Main loop:
-# - perform simulation steps until Webots is stopping the controller
-while robot.step(timestep) != -1:
-    # Read the sensors:
-    # Enter here functions to read sensor data, like:
-    #  val = ds.getValue()
-
-    # Process sensor data here.
-
-    # Enter here functions to send actuator commands, like:
-    #  motor.setPosition(10.0)
-    pass
-
-# Enter here exit cleanup code.
+if __name__ == "__main__":
+    main()
