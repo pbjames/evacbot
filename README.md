@@ -53,6 +53,12 @@ local hazards will be the lowest weighted.
 The algorithm will continually update the node graph and traverse safely in order to be
 reactive to dynamic situations.
 
-### SLAM
+### SLAM - Tamryn Haque
+
+We wish to perform 3-dimensional SLAM in potentially hazardous areas. Through use of the Mavic 2 Pro drone with additional sensors, such as the Velodyne VLP-16 LiDAR.
+
+Our system will make use of the SLAM algorithm LIO-SAM, which combines LiDAR data and IMU data for accurate and smooth localization. LiDAR provides geometric features and the IMU provides motion updates. LIO-SAM combines them through non-linear optimization, producing low-drift trajectory and a clean 3D map of the environment.
+
+This sensor set-up and algorithm together allow the drone to fly, localize, and map reliably in potentially dark, GPS-denied environment.
 
 ### Hazard Identification
