@@ -1,6 +1,10 @@
+from functools import cached_property
 from typing import Final, final
+
+from numpy.typing import NDArray
 from controller.motor import Motor
 from controller.robot import Robot
+import numpy as np
 import math
 
 from utils import clamp
@@ -22,6 +26,10 @@ LEFT_COMPENSATION: Final[float] = 0.998
 
 @final
 class Mavic:
+    """
+    Store all the components as properties and operate on them holistically, let's us
+    interop between components cleanly too.
+    """
     def __init__(self):
         self.robot = Robot()
         self.timestep = int(self.robot.getBasicTimeStep())
@@ -60,13 +68,24 @@ class Mavic:
         self.front_left_led.set(not value)
         self.front_right_led.set(value)
 
-    def move_disturbance(
+    def move(
         self,
         roll_disturbance: float,
         pitch_disturbance: float,
         yaw_disturbance: float,
         target_altitude: float,
     ):
+        """
+        We're using a disturbance algorithm to control the four propellers
+        based on how they affect rotation on the principle axes, as well
+        as forward and vertical velocities.
+
+        Args:
+            roll_disturbance: +ve banks left, vice versa, uses imu
+            pitch_disturbance: backwards (+ve) or forwards (-ve) motion, uses imu
+            yaw_disturbance: +ve rotates right, -ve rotates left, uses imu
+            target_altitude: controls vertical velocity to converge on alt, uses gps
+        """
         roll, pitch, _ = self.imu.getRollPitchYaw()
         _, _, altitude = self.gps.getValues()
         roll_velocity, pitch_velocity, _ = self.gyro.getValues()
@@ -93,6 +112,16 @@ class Mavic:
         self.rear_right_motor.setVelocity(
             K_VERTICAL_THRUST * REAR_COMPENSATION + rear_right_velocity
         )
+
+    @property
+    def image_array(self) -> NDArray[np.uint64]:
+        """
+        Getter for the camera image as a numpy array
+
+        Returns:
+            3D numpy array of rgb pixel values
+        """
+        return np.array(self.camera.getImageArray())
 
     def step(self, timestep: int = 0):
         return self.robot.step(timestep or self.timestep)
