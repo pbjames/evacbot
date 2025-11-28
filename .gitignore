@@ -1,2 +1,4 @@
 worlds/.*
 controllers/*/**/__pycache__
+protos/Mavic2Pro/meshes
+protos/Mavic2Pro/textures
