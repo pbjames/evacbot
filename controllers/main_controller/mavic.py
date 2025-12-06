@@ -122,6 +122,9 @@ class Mavic:
             3D numpy array of rgb pixel values
         """
         return np.array(self.camera.getImageArray())
+        
+    def detect_hazard(self):
+        ...
 
     def step(self, timestep: int = 0):
         return self.robot.step(timestep or self.timestep)
