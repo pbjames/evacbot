@@ -1,0 +1,285 @@
+#VRML_SIM R2025a utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "../protos/Mavic2ProMod.proto"
+
+WorldInfo {
+  defaultDamping Damping {
+    linear 0.5
+    angular 0.5
+  }
+}
+Viewpoint {
+  orientation -0.0049497676748498365 0.9899452853423693 0.14136418156088904 0.07071038935873218
+  position -1.956268869616256 -0.07285492774466273 0.5269683783140787
+  follow "Mavic 2 PRO (Modified)"
+  followType "Mounted Shot"
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+Mavic2ProMod {
+}
+Solid {
+  translation 0 0 -0.07
+  children [
+    Shape {
+      appearance DEF default PBRAppearance {
+        metalness 0
+      }
+      geometry DEF box10x10x10 Box {
+        size 10 10 0.1
+      }
+    }
+  ]
+  name "floor"
+  boundingObject USE box10x10x10
+}
+Solid {
+  translation -12 0 -8.64
+  children [
+    Shape {
+      appearance DEF default PBRAppearance {
+        metalness 0
+      }
+      geometry USE box10x10x10
+    }
+  ]
+  name "floor(1)"
+  boundingObject USE box10x10x10
+}
+Solid {
+  translation -17.5 0 -8.64
+  children [
+    Shape {
+      appearance DEF default PBRAppearance {
+        metalness 0
+      }
+      geometry USE box10x10x10
+    }
+  ]
+  name "floor(2)"
+  boundingObject USE box10x10x10
+}
+Solid {
+  translation -17.5 0 -0.55
+  children [
+    Shape {
+      appearance DEF default PBRAppearance {
+        metalness 0
+      }
+      geometry USE box10x10x10
+    }
+  ]
+  name "floor(3)"
+  boundingObject USE box10x10x10
+}
+Solid {
+  translation -17.5 0 -5.43
+  children [
+    Shape {
+      appearance DEF default PBRAppearance {
+        metalness 0
+      }
+      geometry USE box10x10x10
+    }
+  ]
+  name "floor(4)"
+  boundingObject USE box10x10x10
+}
+Solid {
+  translation 0 0 2.55
+  children [
+    Shape {
+      appearance DEF transparent PBRAppearance {
+        baseColor 0 0 0
+        transparency 0.4
+      }
+      geometry USE box10x10x10
+    }
+  ]
+  name "ceiling"
+  boundingObject USE box10x10x10
+}
+Solid {
+  translation -10 0 2.5
+  children [
+    Shape {
+      appearance DEF transparent PBRAppearance {
+        baseColor 0 0 0
+        transparency 0.4
+      }
+      geometry USE box10x10x10
+    }
+  ]
+  name "ceiling(1)"
+  boundingObject USE box10x10x10
+}
+Solid {
+  translation -17.5 0 2.5
+  children [
+    Shape {
+      appearance DEF transparent PBRAppearance {
+        baseColor 0 0 0
+        transparency 0.4
+      }
+      geometry USE box10x10x10
+    }
+  ]
+  name "ceiling(2)"
+  boundingObject USE box10x10x10
+}
+Solid {
+  translation -4.95 0 -5.00998
+  rotation 0 1 0 1.5708
+  children [
+    Shape {
+      appearance USE default
+      geometry USE box10x10x10
+    }
+  ]
+  name "connecting_wall1"
+  boundingObject USE box10x10x10
+}
+Solid {
+  translation 0 5 0
+  children [
+    Shape {
+      appearance USE default
+      geometry DEF box_5x10wall Box {
+        size 10 0.1 5
+      }
+    }
+  ]
+  name "wall1"
+  boundingObject USE box_5x10wall
+}
+Solid {
+  translation -10 5 -7.5
+  children [
+    Shape {
+      appearance USE default
+      geometry Box {
+        size 10 0.1 20
+      }
+    }
+  ]
+  name "bigwall"
+  boundingObject USE box_5x10wall
+}
+Solid {
+  translation -10 -5 -7.5
+  children [
+    Shape {
+      appearance USE default
+      geometry Box {
+        size 10 0.1 20
+      }
+    }
+  ]
+  name "bigwall(1)"
+  boundingObject USE box_5x10wall
+}
+Solid {
+  translation -17.49 -5 -7.5
+  children [
+    Shape {
+      appearance USE default
+      geometry Box {
+        size 10 0.1 20
+      }
+    }
+  ]
+  name "bigwall(2)"
+  boundingObject USE box_5x10wall
+}
+Solid {
+  translation -17.49 4.99 -7.5
+  children [
+    Shape {
+      appearance USE default
+      geometry Box {
+        size 10 0.1 20
+      }
+    }
+  ]
+  name "bigwall(3)"
+  boundingObject USE box_5x10wall
+}
+Solid {
+  translation -22.45 0 -7.5
+  rotation 0 0 1 -1.5707953071795862
+  children [
+    Shape {
+      appearance USE default
+      geometry Box {
+        size 10 0.1 20
+      }
+    }
+  ]
+  name "bigwall(4)"
+  boundingObject USE box_5x10wall
+}
+Solid {
+  translation 0 -5 0
+  children [
+    Shape {
+      appearance USE default
+      geometry USE box_5x10wall
+    }
+  ]
+  name "wall2"
+  boundingObject USE box_5x10wall
+}
+Solid {
+  translation 5 0 0
+  rotation 0 0 1 -1.5707953071795862
+  children [
+    Shape {
+      appearance USE default
+      geometry USE box_5x10wall
+    }
+  ]
+  name "wall3"
+  boundingObject USE box_5x10wall
+}
+Solid {
+  translation -15 0 -3
+  rotation 0 0 1 -1.5707953071795862
+  children [
+    Shape {
+      appearance USE default
+      geometry USE box_5x10wall
+    }
+  ]
+  name "wall3(1)"
+  boundingObject USE box_5x10wall
+}
+Solid {
+  translation -5 -2.5 0
+  rotation 0 0 1 -1.5707953071795862
+  children [
+    Shape {
+      appearance USE default
+      geometry DEF wall5x5 Box {
+        size 5 0.1 5
+      }
+    }
+  ]
+  name "wall3(2)"
+  boundingObject USE wall5x5
+}
+Solid {
+  translation -9.23376 0 -6.13427
+  rotation 0 1 0 -0.523595307179586
+  children [
+    Shape {
+      appearance USE default
+      geometry USE box10x10x10
+    }
+  ]
+  name "slope1"
+  boundingObject USE box10x10x10
+}
