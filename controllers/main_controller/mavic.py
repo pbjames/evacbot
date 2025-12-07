@@ -1,4 +1,3 @@
-from functools import cached_property
 from typing import Final, final
 
 from numpy.typing import NDArray
