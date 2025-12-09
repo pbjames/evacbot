@@ -1,26 +1,24 @@
-from typing import Final, final
+import math
+from typing import final
 
-from numpy.typing import NDArray
+import numpy as np
 from controller.motor import Motor
 from controller.robot import Robot
-import numpy as np
-import math
+from numpy.typing import NDArray
 
-from utils import clamp
-
-# Empirically found constants ripped from the source controller
-K_VERTICAL_THRUST: Final[float] = 68.5  # with this thrust, the drone lifts.
-K_VERTICAL_OFFSET: Final[float] = (
-    0.6  # Vertical offset where the robot actually targets to stabilize itself.)
+from const import (
+    INITIAL_THRUST,
+    K_PITCH_P,
+    K_ROLL_P,
+    K_VERTICAL_OFFSET,
+    K_VERTICAL_P,
+    K_VERTICAL_THRUST,
+    LEFT_COMPENSATION,
+    REAR_COMPENSATION,
+    TRAVEL_VARIANCE,
+    Coordinate
 )
-K_VERTICAL_P: Final[float] = 3.0  # P constant of the vertical PID.
-K_ROLL_P: Final[float] = 50.0  # P constant of the roll PID.
-K_PITCH_P: Final[float] = 30.0  # P constant of the pitch PID.
-INITIAL_THRUST: Final[float] = 1.0
-
-# These were found by James to hinder idle drift
-REAR_COMPENSATION: Final[float] = 0.996
-LEFT_COMPENSATION: Final[float] = 0.998
+from utils import clamp
 
 
 @final
@@ -29,6 +27,7 @@ class Mavic:
     Store all the components as properties and operate on them holistically, let's us
     interop between components cleanly too.
     """
+
     def __init__(self):
         self.robot = Robot()
         self.timestep = int(self.robot.getBasicTimeStep())
@@ -44,6 +43,7 @@ class Mavic:
         self.rear_left_motor = self.robot.getMotor("rear left propeller")
         self.rear_right_motor = self.robot.getMotor("rear right propeller")
         self.keyboard = self.robot.getKeyboard()
+        self.velodyne = self.robot.getLidar("velodyne")
         self.__enable_components()
 
     def __enable_components(self):
@@ -53,6 +53,8 @@ class Mavic:
         self.camera.enable(self.timestep)
         self.imu.enable(self.timestep)
         self.keyboard.enable(self.timestep)
+        self.velodyne.enable(self.timestep)
+        self.velodyne.enablePointCloud()
         motors: list[Motor] = [
             self.rear_left_motor,
             self.front_left_motor,
@@ -112,6 +114,23 @@ class Mavic:
             K_VERTICAL_THRUST * REAR_COMPENSATION + rear_right_velocity
         )
 
+    def move_to_coord(self, dst: Coordinate) -> bool:
+        """
+        Implement the simplest navigation strategy which is to align with the target
+        on the x-y plane and move forwards toward it. Then align the altitude (z).
+
+        Returns:
+            True if we've reached an acceptable proximity to the destination else False
+        """
+        x, y, z = self.gps.getValues()
+        dst_x, dst_y, dst_z = dst
+        dx, dy, dz = x - dst_x, y - dst_y, z - dst_z
+        # XXX: God knows if using target alt and yaw at the same time is a good idea
+        aoa = math.asin(dy / dx)
+        print(f"move_to_coord() {dx=} {dy=} {dz=} {aoa=}")
+        self.move(0, 0, aoa, dz)
+        return (dx ** 2 + dy ** 2 + dz ** 2) <= TRAVEL_VARIANCE
+
     @property
     def image_array(self) -> NDArray[np.uint64]:
         """
@@ -121,9 +140,8 @@ class Mavic:
             3D numpy array of rgb pixel values
         """
         return np.array(self.camera.getImageArray())
-        
-    def detect_hazard(self):
-        ...
+
+    def detect_hazard(self): ...
 
     def step(self, timestep: int = 0):
         return self.robot.step(timestep or self.timestep)

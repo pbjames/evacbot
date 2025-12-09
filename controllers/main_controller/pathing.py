@@ -1,14 +1,9 @@
+# TODO: Rewrite with numpy
 import heapq
 import math
 from random import random
-from typing import Final
 
-Coordinate = tuple[float, float, float]
-BoundingBox = tuple[Coordinate, Coordinate]
-
-ORIGIN: Final[Coordinate] = (0, 0, 0)
-DRONE_BOUNDING_BOX: Final[BoundingBox] = (-0.25, -0.25, -0.20), (0.25, 0.25, 0.20)
-SAMPLE_ATTEMPTS: Final[int] = 200
+from const import DRONE_BOUNDING_BOX, ORIGIN, SAMPLE_ATTEMPTS, BoundingBox, Coordinate
 
 
 class Pathing:
@@ -23,16 +18,20 @@ class Pathing:
 
     def __init__(self):
         self.__point_cloud: list[Coordinate] = []
-        self.current_position: Coordinate = ORIGIN
+        self.__current_position: Coordinate = ORIGIN
 
     @property
     def position(self):
-        return self.current_position
+        return self.__current_position
 
     @position.setter
-    def set_position(self, value: Coordinate):
-        # TODO: make it not count if we set it to something goofy
-        return value
+    def position(self, value: Coordinate):
+        # TODO: Do sanity checks or something
+        self.__current_position = value
+
+    @property
+    def point_cloud(self):
+        return self.__point_cloud
 
     def add_points(self, point_cloud: list[Coordinate]):
         self.__point_cloud.extend(point_cloud)
@@ -50,7 +49,7 @@ class Pathing:
 
     def sample_random_point(self) -> Coordinate:
         """
-        Sample from linearly interpolation of a bounding box in 3D space.
+        Sample from random linear interpolations through a bounding box in 3D space.
 
         Returns:
             Randomly generated coordinate
@@ -75,11 +74,16 @@ class Pathing:
         Returns:
             Coordinate of random point, or position if there is no apparent space.
         """
-        bbox = self.cloud_bounding_box()
+        (max_x, max_y, max_z), (min_x, min_y, min_z) = DRONE_BOUNDING_BOX
+        pos_x, pos_y, pos_z = self.position
+        max_coord: Coordinate = max_x + pos_x, max_y + pos_y, max_z + pos_z
+        min_coord: Coordinate = (min_x + pos_x, min_y + pos_y, min_z + pos_z)
+        bbox: BoundingBox = (max_coord, min_coord)
         attempts = 0
         while (
             not self.check_coordinate_within(point := self.sample_random_point(), bbox)
             and attempts <= SAMPLE_ATTEMPTS
         ):
             attempts += 1
-        return point
+        print(f"sample_safe_point() {bbox=} {point=} {attempts=}")
+        return point if attempts <= SAMPLE_ATTEMPTS else self.position
