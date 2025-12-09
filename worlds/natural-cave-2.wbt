@@ -1,0 +1,192 @@
+#VRML_SIM R2025a utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/appearances/protos/Asphalt.proto"
+EXTERNPROTO "../protos/Mavic2ProMod.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/factory/containers/protos/WoodenBox.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/floors/protos/UnevenTerrain.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/apartment_structure/protos/Wall.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/rocks/protos/Rock.proto"
+
+WorldInfo {
+  defaultDamping Damping {
+    linear 0.5
+    angular 0.5
+  }
+}
+Viewpoint {
+  orientation 0.0017130323954559223 -0.9998615339229842 -0.016552295949182422 6.076906946711412
+  position -4.6411461202788535 0.550636028800678 1.5977604133123395
+  follow "Mavic 2 PRO (Modified)"
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+Solid {
+  children [
+    Shape {
+      appearance Asphalt {
+        colorOverride 0 1 0
+      }
+      geometry Box {
+        size 3 3 0.1
+      }
+    }
+  ]
+  name "Starting floor"
+  boundingObject Shape {
+    appearance Asphalt {
+    }
+    geometry Box {
+      size 3 3 0.1
+    }
+  }
+}
+UnevenTerrain {
+  translation 11 0 0
+  size 20 6 0.1
+}
+WoodenBox {
+  translation 4 1 1.5
+  size 3 3 3
+}
+Solid {
+  translation 22 0 0
+  children [
+    Shape {
+      appearance Asphalt {
+        colorOverride 1 0 0
+      }
+      geometry Box {
+        size 3 3 0.1
+      }
+    }
+  ]
+  name "Ending floor"
+  boundingObject Shape {
+    appearance Asphalt {
+    }
+    geometry Box {
+      size 3 3 0.1
+    }
+  }
+}
+Group {
+  children [
+    Solid {
+      translation 0.5 0 0.7
+      rotation 0 1 0 4.692820414042842e-06
+      children [
+        Pose {
+          rotation -3.3905013482585576e-09 0.7071062811861719 0.7071072811865696 3.14159
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColorMap DEF DEF_FIRE_TEX_A ImageTexture {
+                  url [
+                    "fire2_frames_png/flame_000.png"
+                  ]
+                }
+              }
+              geometry Box {
+                size 0.8 1.2 0.02
+              }
+            }
+          ]
+        }
+        Pose {
+          rotation -0.47690418702564413 0.6215162437375871 0.6215142437368028 -2.251585307179586
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColorMap DEF DEF_FIRE_TEX_B ImageTexture {
+                  url [
+                    "fire2_frames_png/flame_000.png"
+                  ]
+                }
+              }
+              geometry Box {
+                size 0.8 1.2 0.02
+              }
+            }
+          ]
+        }
+      ]
+      name "fire"
+      boundingObject Cylinder {
+        height 1.2
+        radius 0.6
+      }
+    }
+    Pose {
+      translation 18 0 1.3
+      children [
+        Shape {
+          appearance PBRAppearance {
+            transparency 0.5
+          }
+          geometry Box {
+            size 4 5 2
+          }
+        }
+      ]
+    }
+    Rock {
+      translation 10 -1 3
+      scale 17
+    }
+    PointLight {
+      attenuation 0 0 0.2
+      color 0.8 0.8 0
+      location 18 0 4
+    }
+    PointLight {
+      attenuation 0 0 0.2
+      color 0.8 0.8 0
+      intensity 2
+      location 10 2 3
+    }
+    PointLight {
+      attenuation 0 0 0.2
+      color 0.8 0.8 0
+      location 5 -2 0.2
+    }
+    PointLight {
+      attenuation 0 0 0.2
+      color 0.8 0.8 0
+      location 5 2 3
+    }
+    Wall {
+      translation 10 3 0
+      rotation 0 0 -1 3.67802e-06
+      size 20 0.1 4
+      appearance DEF WALL PBRAppearance {
+        baseColor 0 0.0901961 0
+        roughness 0.5
+        metalness 0.5
+      }
+    }
+    Wall {
+      translation 10 -3 0
+      rotation 0 0 -1 3.67802e-06
+      name "wall(1)"
+      size 20 0.1 4
+      appearance USE WALL
+    }
+    Wall {
+      translation 10 -3 4
+      rotation 0.999999999996618 -1.8390099999937804e-06 1.8390099999937804e-06 -1.5707953071795862
+      name "wall(2)"
+      size 20 0.1 6
+      appearance USE WALL
+    }
+  ]
+}
+Mavic2ProMod {
+}
+Robot {
+  controller "fire_animator"
+  supervisor TRUE
+}
