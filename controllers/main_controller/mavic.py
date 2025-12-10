@@ -1,4 +1,5 @@
 import math
+import struct
 from typing import final
 
 import numpy as np
@@ -16,9 +17,9 @@ from const import (
     LEFT_COMPENSATION,
     REAR_COMPENSATION,
     TRAVEL_VARIANCE,
-    Coordinate
+    Coordinate,
 )
-from utils import clamp
+from utils import clamp, normalise
 
 
 @final
@@ -44,6 +45,9 @@ class Mavic:
         self.rear_right_motor = self.robot.getMotor("rear right propeller")
         self.keyboard = self.robot.getKeyboard()
         self.velodyne = self.robot.getLidar("velodyne")
+        self.emitter = self.robot.getEmitter("emitter")
+        self.up_sensor = self.robot.getDistanceSensor("ds_up")
+        self.down_sensor = self.robot.getDistanceSensor("ds_down")
         self.__enable_components()
 
     def __enable_components(self):
@@ -55,6 +59,8 @@ class Mavic:
         self.keyboard.enable(self.timestep)
         self.velodyne.enable(self.timestep)
         self.velodyne.enablePointCloud()
+        self.up_sensor.enable(self.timestep)
+        self.down_sensor.enable(self.timestep)
         motors: list[Motor] = [
             self.rear_left_motor,
             self.front_left_motor,
@@ -123,13 +129,15 @@ class Mavic:
             True if we've reached an acceptable proximity to the destination else False
         """
         x, y, z = self.gps.getValues()
+        _, _, yaw = self.imu.getRollPitchYaw()
         dst_x, dst_y, dst_z = dst
         dx, dy, dz = x - dst_x, y - dst_y, z - dst_z
-        # XXX: God knows if using target alt and yaw at the same time is a good idea
-        aoa = math.asin(dy / dx)
-        print(f"move_to_coord() {dx=} {dy=} {dz=} {aoa=}")
-        self.move(0, 0, aoa, dz)
-        return (dx ** 2 + dy ** 2 + dz ** 2) <= TRAVEL_VARIANCE
+        angle = normalise((math.atan2(dy, dx) - math.pi) - yaw)
+        distance_from_us = dx**2 + dy**2  # + dz**2
+        self.move(0, -0.50, angle, 1)
+        self.emitter.send(struct.pack("fff", *dst))
+        # print(f"move_to_coord() {dx=} {dy=} {dz=} {angle=} {distance_from_us=}")
+        return abs(distance_from_us) <= TRAVEL_VARIANCE
 
     @property
     def image_array(self) -> NDArray[np.uint64]:

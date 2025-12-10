@@ -1,7 +1,5 @@
 # TODO: Rewrite with numpy
-import heapq
-import math
-from random import random
+import random
 
 from const import DRONE_BOUNDING_BOX, ORIGIN, SAMPLE_ATTEMPTS, BoundingBox, Coordinate
 
@@ -34,30 +32,28 @@ class Pathing:
         return self.__point_cloud
 
     def add_points(self, point_cloud: list[Coordinate]):
-        self.__point_cloud.extend(point_cloud)
+        p_x, p_y, p_z = self.position
+        self.__point_cloud.extend(
+            [(p_x + x, p_y + y, p_z + z) for x, y, z in point_cloud]
+        )
 
     def clear(self):
         self.__point_cloud.clear()
 
-    def cloud_bounding_box(self) -> BoundingBox:
-        max_x = max_y = max_z = -math.inf
-        min_x = min_y = min_z = math.inf
-        for x, y, z in self.__point_cloud:
-            max_x, max_y, max_z = max(x, max_x), max(y, max_y), max(z, max_z)
-            min_x, min_y, min_z = min(x, min_x), min(y, min_y), min(z, min_z)
-        return (max_x, max_y, max_z), (min_x, min_y, min_z)
-
     def sample_random_point(self) -> Coordinate:
         """
-        Sample from random linear interpolations through a bounding box in 3D space.
+        Sample a random point from our point cloud and generate linear interpolation
+        between that and our position. It's guaranteed by the sensor that there's no
+        visible obstruction.
 
         Returns:
             Randomly generated coordinate
         """
-        (max_x, max_y, max_z), (min_x, min_y, min_z) = self.cloud_bounding_box()
-        x = min_x + random() * abs(max_x - min_x)
-        y = min_y + random() * abs(max_y - min_y)
-        z = min_z + random() * abs(max_z - min_z)
+        dst_x, dst_y, dst_z = random.choice(self.point_cloud)
+        our_x, our_y, our_z = self.position
+        x = our_x + random.random() * abs(dst_x - our_x)
+        y = our_y + random.random() * abs(dst_y - our_y)
+        z = our_z + random.random() * abs(dst_z - our_z)
         return x, y, z
 
     @staticmethod
@@ -85,5 +81,4 @@ class Pathing:
             and attempts <= SAMPLE_ATTEMPTS
         ):
             attempts += 1
-        print(f"sample_safe_point() {bbox=} {point=} {attempts=}")
         return point if attempts <= SAMPLE_ATTEMPTS else self.position

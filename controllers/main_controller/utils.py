@@ -1,10 +1,25 @@
 from math import inf
+import math
 from const import Coordinate
 from controller.lidar_point import LidarPoint
 
 
 def clamp(value: float, min_v: float, max_v: float):
     return min(max_v, max(value, min_v))
+
+
+def normalise(angle: float) -> float:
+    """
+    Keep our angle (radians) inside [-pi, pi]
+
+    Returns:
+        Normalised angle
+    """
+    while angle > math.pi:
+        angle -= 2 * math.pi
+    while angle < -math.pi:
+        angle += 2 * math.pi
+    return angle
 
 
 def point_cloud_filter(points: list[LidarPoint]) -> list[Coordinate]:

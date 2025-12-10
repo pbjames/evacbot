@@ -1,8 +1,6 @@
 from argparse import ArgumentParser
-from math import inf
-
-from const import ORIGIN, WEBOTS_TERMINATE, Coordinate
-from controller.lidar_point import LidarPoint
+import math
+from const import ORIGIN, WEBOTS_TERMINATE
 from mavic import Mavic
 from pathing import Pathing
 from utils import point_cloud_filter, print_help
@@ -52,7 +50,12 @@ def main():
                     print(f"{target_altitude=}")
             rotational_values = roll_disturbance, pitch_disturbance, yaw_disturbance
             mavic.move(*rotational_values, target_altitude)
-            verbose_log(f"{rotational_values=} {target_altitude=}")
+            _, _, yaw = mavic.imu.getRollPitchYaw()
+            verbose_log(f"[+] {(yaw / math.pi)=}")
+
+    def update_pathing_position(mavic: Mavic, pathing: Pathing):
+        x, y, z = mavic.gps.getValues()
+        pathing.position = (x, y, z)
 
     def control_loop(mavic: Mavic, pathing: Pathing):
         """
@@ -65,17 +68,13 @@ def main():
         7. Run A* once on the nodes
         8. Queue the movements necessary to get to the node and exhaust it
         """
-        # TODO: Replace with Tam's SLAM solution, for now gps = localisation
-        x, y, z = mavic.gps.getValues()
-        pathing.position = (x, y, z)
-        # TODO: Replace with Xiaoyu hazard detection
+        update_pathing_position(mavic, pathing)
         mavic.detect_hazard()
-        # INFO: Pathing
         point_cloud = mavic.velodyne.getPointCloud()
         pathing.add_points(point_cloud_filter(point_cloud))
         # TODO: Insert hazard detection correlation here
         ################################################
-        move_to_me = pathing.sample_safe_point()
+        move_to_me = pathing.sample_random_point()
         mavic.move_to_coord(move_to_me)
         return move_to_me
 
@@ -87,13 +86,16 @@ def main():
     else:
         print("[*] Using automatic mode...")
         pathing = Pathing()
-        movement_lock = False
+        moving = False
         point = ORIGIN
         while mavic.step() != WEBOTS_TERMINATE:
-            if not movement_lock:
+            if not moving:
                 print("[*] Choosing next node again")
                 point = control_loop(mavic, pathing)
-            movement_lock = not mavic.move_to_coord(point)
+            moving = not mavic.move_to_coord(point)
+            if moving:
+                update_pathing_position(mavic, pathing)
+            verbose_log(f"GPS: {mavic.gps.getValues()}")
 
 
 if __name__ == "__main__":

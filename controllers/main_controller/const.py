@@ -23,5 +23,5 @@ LEFT_COMPENSATION: Final[float] = 0.998
 # INFO: Pathing
 ORIGIN: Final[Coordinate] = (0, 0, 0)
 DRONE_BOUNDING_BOX: Final[BoundingBox] = (-0.25, -0.25, -0.20), (0.25, 0.25, 0.20)
-TRAVEL_VARIANCE: Final[float] = 0.05**2
+TRAVEL_VARIANCE: Final[float] = 0.78**2
 SAMPLE_ATTEMPTS: Final[int] = 200
