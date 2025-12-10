@@ -11,8 +11,8 @@ WorldInfo {
   }
 }
 Viewpoint {
-  orientation -0.0049497676748498365 0.9899452853423693 0.14136418156088904 0.07071038935873218
-  position -2.863461507289354 -0.08192715653103726 0.5905789695123191
+  orientation -0.03489096085563532 0.03488200724065248 -0.9987821916821672 4.711185224782206
+  position 0.04561208280324018 -1.9320046411895189 0.3566087795323158
   follow "Mavic 2 PRO (Modified)"
   followType "Mounted Shot"
 }
@@ -21,6 +21,22 @@ TexturedBackground {
 TexturedBackgroundLight {
 }
 Mavic2ProMod {
+  hidden translation_10 0.0412774 -0.00469654 -0.00405862
+  hidden rotation_10 0 0 1 0
+  hidden translation_11 0.000625212 -0.00530346 -0.0207448
+  hidden rotation_11 0 1 0 0
+  hidden translation_12 0.00754686 0.0160388 -0.00586401
+  hidden rotation_12 1 0 0 0
+  translation 3.633809634514553e-07 -0.005099485633795545 0.04568335508429199
+  rotation 0.03489096085563532 -0.03488200724065247 0.9987821916821672 1.5720000823973805
+}
+Robot {
+  children [
+    Receiver {
+    }
+  ]
+  controller "supervisor"
+  supervisor TRUE
 }
 Solid {
   translation 0 0 -0.07
@@ -144,6 +160,42 @@ Solid {
   boundingObject USE box10x10x10
 }
 Solid {
+  translation -7.05504 0 -4.42397
+  rotation 0 1 0 2.0944
+  children [
+    Shape {
+      appearance USE default
+      geometry USE box10x10x10
+    }
+  ]
+  name "connecting_wall1(3)"
+  boundingObject USE box10x10x10
+}
+Solid {
+  translation -22.48 0 -2.53998
+  rotation 0 1 0 1.5708
+  children [
+    Shape {
+      appearance USE default
+      geometry USE box10x10x10
+    }
+  ]
+  name "connecting_wall1(1)"
+  boundingObject USE box10x10x10
+}
+Solid {
+  translation -22.48 0 -12.55
+  rotation 0 1 0 1.5708
+  children [
+    Shape {
+      appearance USE default
+      geometry USE box10x10x10
+    }
+  ]
+  name "connecting_wall1(2)"
+  boundingObject USE box10x10x10
+}
+Solid {
   translation 0 5 0
   children [
     Shape {
@@ -154,6 +206,33 @@ Solid {
     }
   ]
   name "wall1"
+  boundingObject USE box_5x10wall
+}
+Solid {
+  translation 0 -5 0
+  children [
+    Shape {
+      appearance USE default
+      geometry DEF box_5x10wall Box {
+        size 10 0.1 5
+      }
+    }
+  ]
+  name "wall1(1)"
+  boundingObject USE box_5x10wall
+}
+Solid {
+  translation 5 0 0
+  rotation 0 0 1 -1.5707953071795862
+  children [
+    Shape {
+      appearance USE default
+      geometry DEF box_5x10wall Box {
+        size 10 0.1 5
+      }
+    }
+  ]
+  name "wall1(2)"
   boundingObject USE box_5x10wall
 }
 Solid {
@@ -170,6 +249,19 @@ Solid {
   boundingObject USE box_5x10wall
 }
 Solid {
+  translation -17.5 5 -7.5
+  children [
+    Shape {
+      appearance USE default
+      geometry Box {
+        size 10 0.1 20
+      }
+    }
+  ]
+  name "bigwall(2)"
+  boundingObject USE box_5x10wall
+}
+Solid {
   translation -10 -5 -7.5
   children [
     Shape {
@@ -183,20 +275,7 @@ Solid {
   boundingObject USE box_5x10wall
 }
 Solid {
-  translation -17.49 -5 -7.5
-  children [
-    Shape {
-      appearance USE default
-      geometry Box {
-        size 10 0.1 20
-      }
-    }
-  ]
-  name "bigwall(2)"
-  boundingObject USE box_5x10wall
-}
-Solid {
-  translation -17.49 4.99 -7.5
+  translation -17.5 -5 -7.5
   children [
     Shape {
       appearance USE default
@@ -208,78 +287,19 @@ Solid {
   name "bigwall(3)"
   boundingObject USE box_5x10wall
 }
-Solid {
-  translation -22.45 0 -7.5
-  rotation 0 0 1 -1.5707953071795862
+Transform {
+  translation 0.7447899580001831 0.4715454876422882 0.8882455229759216
   children [
     Shape {
-      appearance USE default
-      geometry Box {
-        size 10 0.1 20
+      appearance Appearance {
+        material Material {
+          diffuseColor 1 0 0
+          transparency 0.5
+        }
+      }
+      geometry Sphere {
+        radius 0.05
       }
     }
   ]
-  name "bigwall(4)"
-  boundingObject USE box_5x10wall
-}
-Solid {
-  translation 0 -5 0
-  children [
-    Shape {
-      appearance USE default
-      geometry USE box_5x10wall
-    }
-  ]
-  name "wall2"
-  boundingObject USE box_5x10wall
-}
-Solid {
-  translation 5 0 0
-  rotation 0 0 1 -1.5707953071795862
-  children [
-    Shape {
-      appearance USE default
-      geometry USE box_5x10wall
-    }
-  ]
-  name "wall3"
-  boundingObject USE box_5x10wall
-}
-Solid {
-  translation -15 0 -3
-  rotation 0 0 1 -1.5707953071795862
-  children [
-    Shape {
-      appearance USE default
-      geometry USE box_5x10wall
-    }
-  ]
-  name "wall3(1)"
-  boundingObject USE box_5x10wall
-}
-Solid {
-  translation -5 -2.5 0
-  rotation 0 0 1 -1.5707953071795862
-  children [
-    Shape {
-      appearance USE default
-      geometry DEF wall5x5 Box {
-        size 5 0.1 5
-      }
-    }
-  ]
-  name "wall3(2)"
-  boundingObject USE wall5x5
-}
-Solid {
-  translation -9.23376 0 -6.13427
-  rotation 0 1 0 -0.523595307179586
-  children [
-    Shape {
-      appearance USE default
-      geometry USE box10x10x10
-    }
-  ]
-  name "slope1"
-  boundingObject USE box10x10x10
 }
