@@ -18,6 +18,7 @@ from const import (
     REAR_COMPENSATION,
     TRAVEL_VARIANCE,
     Coordinate,
+    MODEL_PATH
 )
 from utils import clamp, normalise
 
@@ -149,7 +150,16 @@ class Mavic:
         """
         return np.array(self.camera.getImageArray())
 
-    def detect_hazard(self): ...
-
+    def detect_fire_hazard(self) -> bool:
+        from ultralytics import YOLO
+        model = YOLO(MODEL_PATH)
+        results = model(self.camera.getImage())
+        for box in results.boxes:
+            label = results.names[int(box.cls)]
+            conf = float(box.conf)
+            if label.lower() == "fire" and conf > 0.65:
+                return True
+        return False
+        
     def step(self, timestep: int = 0):
         return self.robot.step(timestep or self.timestep)

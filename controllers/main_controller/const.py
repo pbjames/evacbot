@@ -1,5 +1,6 @@
 # Empirically found constants ripped from the source controller
 from typing import Final
+from pathlib import Path
 
 # INFO: Types
 type Coordinate = tuple[float, float, float]
@@ -25,3 +26,6 @@ ORIGIN: Final[Coordinate] = (0, 0, 0)
 DRONE_BOUNDING_BOX: Final[BoundingBox] = (-0.25, -0.25, -0.20), (0.25, 0.25, 0.20)
 TRAVEL_VARIANCE: Final[float] = 0.78**2
 SAMPLE_ATTEMPTS: Final[int] = 200
+
+# INFO: CV
+MODEL_PATH: Final[Path] = Path(".") / "best.pt"
