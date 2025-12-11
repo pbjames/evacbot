@@ -1,5 +1,6 @@
 from argparse import ArgumentParser
 import math
+import struct
 from const import ORIGIN, WEBOTS_TERMINATE
 from mavic import Mavic
 from pathing import Pathing
@@ -50,8 +51,8 @@ def main():
                     print(f"{target_altitude=}")
             rotational_values = roll_disturbance, pitch_disturbance, yaw_disturbance
             mavic.move(*rotational_values, target_altitude)
-            _, _, yaw = mavic.imu.getRollPitchYaw()
-            verbose_log(f"[+] {(yaw / math.pi)=}")
+            print(f"{mavic.up_sensor.getValue()=}")
+            print(f"{mavic.down_sensor.getValue()=}")
 
     def update_pathing_position(mavic: Mavic, pathing: Pathing):
         x, y, z = mavic.gps.getValues()
@@ -65,16 +66,15 @@ def main():
         4. Assess the location of hazardous objects and correlate with point cloud
         5. Create a random graph of nodes in space
         6. Assign weights to the nodes based on proximity to hazards and visited points
-        7. Run A* once on the nodes
         8. Queue the movements necessary to get to the node and exhaust it
         """
         update_pathing_position(mavic, pathing)
-        mavic.detect_hazard()
+        # mavic.detect_fire_hazard()
         point_cloud = mavic.velodyne.getPointCloud()
         pathing.add_points(point_cloud_filter(point_cloud))
-        # TODO: Insert hazard detection correlation here
-        ################################################
-        move_to_me = pathing.sample_random_point()
+        for point in pathing.point_cloud:
+            mavic.emitter.send(struct.pack("ifff", 1, *point))
+        move_to_me = pathing.sample_safe_point()
         mavic.move_to_coord(move_to_me)
         return move_to_me
 

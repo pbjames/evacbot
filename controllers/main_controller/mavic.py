@@ -136,8 +136,7 @@ class Mavic:
         angle = normalise((math.atan2(dy, dx) - math.pi) - yaw)
         distance_from_us = dx**2 + dy**2  # + dz**2
         self.move(0, -0.50, angle, 1)
-        self.emitter.send(struct.pack("fff", *dst))
-        # print(f"move_to_coord() {dx=} {dy=} {dz=} {angle=} {distance_from_us=}")
+        self.emitter.send(struct.pack("ifff", 0, *dst))
         return abs(distance_from_us) <= TRAVEL_VARIANCE
 
     @property

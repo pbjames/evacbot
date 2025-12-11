@@ -33,9 +33,7 @@ class Pathing:
 
     def add_points(self, point_cloud: list[Coordinate]):
         p_x, p_y, p_z = self.position
-        self.__point_cloud.extend(
-            [(p_x + x, p_y + y, p_z + z) for x, y, z in point_cloud]
-        )
+        self.__point_cloud = [(p_x + x, p_y + y, p_z + z) for x, y, z in point_cloud]
 
     def clear(self):
         self.__point_cloud.clear()
