@@ -28,6 +28,14 @@ Robot {
   translation IS translation
   rotation IS rotation
   children [
+    DistanceSensor {
+      name "ds_up"
+      rotation 0 1 0 0
+    }
+    DistanceSensor {
+      name "ds_down"
+      rotation 0 -1 0 0
+    }
     Accelerometer {
     }
     VelodyneVLP-16 {
@@ -72,6 +80,9 @@ Robot {
           "Mavic2Pro/meshes/body_lenses.obj"
         ]
       }
+    }
+    DEF EMITTER Emitter {
+      name "emitter"
     }
     DEF COMPASS Compass {
     }
