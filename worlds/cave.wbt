@@ -1,0 +1,66 @@
+#VRML_SIM R2025a utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "../protos/Mavic2ProMod.proto"
+
+WorldInfo {
+  defaultDamping Damping {
+    linear 0.5
+    angular 0.5
+  }
+}
+Viewpoint {
+  orientation -0.04861146603695767 0.9714189945766318 0.2323404018793623 0.42428059809160773
+  position -13.889728080864916 -0.2497986467093246 5.082759628785109
+  follow "Mavic 2 PRO (Modified)"
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+Group {
+  children [
+    Solid {
+      children [
+        Shape {
+          appearance PBRAppearance {
+          }
+          geometry Box {
+            size 20 4 0.1
+          }
+        }
+      ]
+      name "ground"
+    }
+    Solid {
+      translation 0 -0.5 0
+      children [
+        Shape {
+          geometry Box {
+            size 20 0.3 6
+          }
+        }
+      ]
+      boundingObject Box {
+        size 20 0.3 6
+      }
+    }
+    Solid {
+      translation 0 0.5 0
+      children [
+        Shape {
+          geometry Box {
+            size 20 0.3 6
+          }
+        }
+      ]
+      name "solid(1)"
+      boundingObject Box {
+        size 20 0.3 6
+      }
+    }
+  ]
+}
+Mavic2ProMod {
+}
