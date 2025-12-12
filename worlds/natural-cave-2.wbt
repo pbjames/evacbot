@@ -16,15 +16,17 @@ WorldInfo {
   }
 }
 Viewpoint {
-  orientation 0.0017130323954559223 -0.9998615339229842 -0.016552295949182422 6.076906946711412
-  position -4.6411461202788535 0.550636028800678 1.5977604133123395
+  orientation 0.11143157304738187 0.8206390954150797 -0.5604770107725257 0.4765439155175976
+  position -7.96116693796545 1.8866400676039985 4.6513622323748525
   follow "Mavic 2 PRO (Modified)"
+  followType "Mounted Shot"
 }
 TexturedBackground {
 }
 TexturedBackgroundLight {
 }
 Solid {
+  translation -1 0 0
   children [
     Shape {
       appearance Asphalt {
@@ -45,7 +47,7 @@ Solid {
   }
 }
 UnevenTerrain {
-  translation 11 0 0
+  translation 10 0 0
   size 20 6 0.1
 }
 WoodenBox {
@@ -76,8 +78,8 @@ Solid {
 Group {
   children [
     Solid {
-      translation 0.5 0 0.7
-      rotation 0 1 0 4.692820414042842e-06
+      translation 8.997928073284653 0.9984601810719509 0.6681998694375849
+      rotation 0.0002705817695099182 -0.004526875689190282 0.9999897170381306 1.047147615254971
       children [
         Pose {
           rotation -3.3905013482585576e-09 0.7071062811861719 0.7071072811865696 3.14159
@@ -86,9 +88,11 @@ Group {
               appearance PBRAppearance {
                 baseColorMap DEF DEF_FIRE_TEX_A ImageTexture {
                   url [
-                    "fire2_frames_png/flame_000.png"
+                    "../20251211161703_37_127.png"
                   ]
                 }
+                roughness 0.8
+                metalness 0.8
               }
               geometry Box {
                 size 0.8 1.2 0.02
@@ -103,9 +107,11 @@ Group {
               appearance PBRAppearance {
                 baseColorMap DEF DEF_FIRE_TEX_B ImageTexture {
                   url [
-                    "fire2_frames_png/flame_000.png"
+                    "../20251211161703_37_127.png"
                   ]
                 }
+                roughness 0.4
+                metalness 0.9
               }
               geometry Box {
                 size 0.8 1.2 0.02
@@ -118,6 +124,9 @@ Group {
       boundingObject Cylinder {
         height 1.2
         radius 0.6
+      }
+      physics Physics {
+        mass 1
       }
     }
     Pose {
@@ -185,8 +194,14 @@ Group {
   ]
 }
 Mavic2ProMod {
-}
-Robot {
-  controller "fire_animator"
-  supervisor TRUE
+  hidden position_0_0 5.553820572137496e-09
+  hidden position_10_0 0.001212606494241036
+  hidden rotation_11 0 1 0 0.001212606494250663
+  hidden position_11_0 -0.00010824277197361104
+  hidden rotation_12 -0.9999999999999999 0 0 0.00010824277341647236
+  translation -1.0672033614392302 -0.062268164962281686 0.11888941824423963
+  rotation 0.007707081240584404 0.041873461062184 0.9990931959319034 -0.3643246954434085
+  controllerArgs [
+    "-mv"
+  ]
 }
