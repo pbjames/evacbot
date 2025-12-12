@@ -2,7 +2,10 @@ import math
 import struct
 from typing import final
 
+import requests
 import numpy as np
+import cv2
+import threading
 from controller.motor import Motor
 from controller.robot import Robot
 from numpy.typing import NDArray
@@ -50,6 +53,9 @@ class Mavic:
         self.up_sensor = self.robot.getDistanceSensor("ds_up")
         self.down_sensor = self.robot.getDistanceSensor("ds_down")
         self.__enable_components()
+        self._send_lock = threading.Lock()
+        self._frame_counter=0
+        self.SEND_EVERY_N_FRAMES = 5
 
     def __enable_components(self):
         self.gyro.enable(self.timestep)
@@ -150,16 +156,47 @@ class Mavic:
         """
         return np.array(self.camera.getImageArray())
 
-    def detect_fire_hazard(self) -> bool:
-        from ultralytics import YOLO
-        model = YOLO(MODEL_PATH)
-        results = model(self.camera.getImage())
-        for box in results.boxes:
-            label = results.names[int(box.cls)]
-            conf = float(box.conf)
-            if label.lower() == "fire" and conf > 0.65:
-                return True
-        return False
+    def detect_fire_hazard(self):
+        """
+        Non-blocking camera frame sender.
+        Sends a JPEG-compressed frame to the external YOLO server.
+        """
+
+        self._frame_counter += 1
+        if self._frame_counter % self.SEND_EVERY_N_FRAMES != 0:
+            return
+
+        raw = self.camera.getImage()
+        if raw is None:
+            return
+
+        width = self.camera.getWidth()
+        height = self.camera.getHeight()
+
+        # Webots camera = BGRA
+        img = np.frombuffer(raw, np.uint8).reshape((height, width, 4))
+        bgr = img[:, :, :3]
+
+        ok, jpeg = cv2.imencode(".jpg", bgr, [int(cv2.IMWRITE_JPEG_QUALITY), 70])
+        if not ok:
+            return
+
+        if not self._send_lock.acquire(blocking=False):
+            return  # previous send still running
+
+        def worker(data):
+            try:
+                requests.post(
+                    "http://127.0.0.1:5001/frame",
+                    files={"file": ("frame.jpg", data, "image/jpeg")},
+                    timeout=1,
+                )
+            except Exception:
+                pass
+            finally:
+                self._send_lock.release()
+
+        threading.Thread(target=worker, args=(jpeg.tobytes(),), daemon=True).start()
         
     def step(self, timestep: int = 0):
         return self.robot.step(timestep or self.timestep)

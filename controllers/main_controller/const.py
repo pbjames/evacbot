@@ -1,10 +1,10 @@
 # Empirically found constants ripped from the source controller
-from typing import Final
+from typing import Final,Tuple
 from pathlib import Path
 
 # INFO: Types
-type Coordinate = tuple[float, float, float]
-type BoundingBox = tuple[Coordinate, Coordinate]
+Coordinate = Tuple[float, float, float]
+BoundingBox = Tuple[Coordinate, Coordinate]
 
 # INFO: Misc
 WEBOTS_TERMINATE: Final[int] = -1
