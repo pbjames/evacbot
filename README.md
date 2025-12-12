@@ -62,3 +62,7 @@ Our system will make use of the SLAM algorithm LIO-SAM, which combines LiDAR dat
 This sensor set-up and algorithm together allow the drone to fly, localize, and map reliably in potentially dark, GPS-denied environment.
 
 ### Hazard Identification
+
+We will focus on designing and integrating the danger detection system, allowing the drone to identify environmental hazards such as fire, toxic gases, and physical obstacles that influence navigation and safety decisions.
+
+We use a YOLOv8 object detector trained to output bounding boxes and confidence scores for fire (and optionally smoke) and onboard sensing (camera, LiDAR/depth, and a simulated gas sensor) and SLAM-based localisation, detected hazards are mapped into a 3D risk layer of the environment. This risk map is then fed into path planning (e.g., A*), where areas near hazards are assigned higher traversal cost or marked as no-go zones, allowing the drone to continuously re-plan safer routes in dark, GPS-denied, and previously unseen subterranean spaces.
